@@ -64,11 +64,6 @@ int GetPlasmaIndex(int t)
   return nPlasmaIndex;
   }
 
-int GetXOffset(int t)
-  {
-  return 0;
-  }
-
 int GetYOffset(int t)
   {
   int nResult = 60;
@@ -491,29 +486,12 @@ float Palette0_GetRed(int nIndex)
 
 float Palette0_GetGreen(int nIndex)
   {
-  float a = 0.0;
-  if((nIndex >= 0) && (nIndex < 64))
-    {
-    a = 0.0;
-    }
-  else if((nIndex >= 64) && (nIndex < 128))
-    {
-    a = 0.0;
-    }
-  else if((nIndex >= 128) && (nIndex < 192))
-    {
-    a = 0.0;
-    }
-  else
-    {
-    a = 0.0;
-    }
-
-  float fResult = cos(a * (3.1415926535 * 2.0) / 128.0 + 3.1415926535) * 31.0 + 32.0;
+  float fResult = cos((3.1415926535 * 2.0) / 128.0 + 3.1415926535) * 31.0 + 32.0;
   fResult /= 63.0;
 
   return fResult;
   }
+
 float Palette0_GetBlue(int nIndex)
   {
   float a = 0.0;
@@ -593,6 +571,7 @@ float Palette1_GetGreen(int nIndex)
 
   return fResult;
   }
+
 float Palette1_GetBlue(int nIndex)
   {
   float a = 0.0;
@@ -755,6 +734,7 @@ float Palette3_GetGreen(int nIndex)
 
   return fResult;
   }
+
 float Palette3_GetBlue(int nIndex)
   {
   float a = 0.0;
@@ -804,6 +784,7 @@ float Palette4_GetRed(int nIndex)
 
   return fResult;
   }
+
 float Palette4_GetGreen(int nIndex)
   {
   float a = 0.0;
@@ -827,6 +808,7 @@ float Palette4_GetGreen(int nIndex)
 
   return fResult;
   }
+
 float Palette4_GetBlue(int nIndex)
   {
   float a = 0.0;
@@ -880,6 +862,7 @@ float Palette_GetRed(int nIndex, int t)
 
   return fResult;
   }
+
 float Palette_GetGreen(int nIndex, int t)
   {
   int nPlasmaIndex = GetPlasmaIndex(t);
@@ -909,6 +892,7 @@ float Palette_GetGreen(int nIndex, int t)
 
   return fResult;
   }
+
 float Palette_GetBlue(int nIndex, int t)
   {
   int nPlasmaIndex = GetPlasmaIndex(t);
@@ -946,12 +930,10 @@ void main(void)
   float fT = float(t);
   t = int(mod(fT, 2323.0));
 
-  float fPlasmaX = (gl_FragCoord.x / resolution.x) * 319.0;
-  float fPlasmaY = (gl_FragCoord.y / resolution.y) * 399.0;
+  float fPlasmaX = (gl_FragCoord.x / float(resolution.x)) * 319.0;
+  float fPlasmaY = (gl_FragCoord.y / float(resolution.y)) * 399.0;
   fPlasmaY = 399.0 - fPlasmaY;
-
   fPlasmaY -= float(GetYOffset(t));
-  fPlasmaX += float(GetXOffset(t));
 
   float fRed = 0.0;
   float fGreen = 0.0;
@@ -959,15 +941,12 @@ void main(void)
 
   if((fPlasmaY >= 0.0) && (fPlasmaY < 280.0))
     {
-    float fScreenX = gl_FragCoord.x;
-    float fScreenY = gl_FragCoord.y;
     float ah = 0.0;
-    float ccc = fPlasmaX / 4.0;
     float fOffset = 0.0;
     float bx = 0.0;
 
-    int nXOffset0or1 = int(mod(fScreenX, 2.0));
-    int xor = int(mod(fScreenY, 2.0));
+    int nXOffset0or1 = int(mod(gl_FragCoord.x, 2.0));
+    int xor = int(mod(gl_FragCoord.y, 2.0));
     if(xor == 1)
       {
       if(nXOffset0or1 == 0)
@@ -980,28 +959,21 @@ void main(void)
         }
       }
 
-    float c1 = float(GetC1(nXOffset0or1, t));
-    float c2 = float(GetC2(nXOffset0or1, t));
-    float c3 = float(GetC3(nXOffset0or1, t));
-    float c4 = float(GetC4(nXOffset0or1, t));
-
-    fOffset = ((fPlasmaY * 2.0) + (c2 * 2.0) - (ccc * 8.0) + (80.0 * 8.0)) / 2.0;
+    fOffset = ((fPlasmaY * 2.0) + (float(GetC2(nXOffset0or1, t)) * 2.0) - (fPlasmaX / 4.0 * 8.0) + (80.0 * 8.0)) / 2.0;
     bx = ((sin(fOffset * DPII / 4096.0) * 55.0 + sin(fOffset * DPII / 4096.0 * 4.0) * 5.0 + sin(fOffset * DPII / 4096.0 * 17.0) * 3.0 + 64.0) * 16.0);
 
-    fOffset = bx + c1 + (ccc * 8.0);
+    fOffset = bx + float(GetC1(nXOffset0or1, t)) + (fPlasmaX / 4.0 * 8.0);
     ah = (sin(fOffset * DPII / 4096.0) * 55.0 + sin(fOffset * DPII / 4096.0 * 6.0) * 5.0 + sin(fOffset * DPII / 4096.0 * 21.0) * 4.0 + 64.0);
 
-    fOffset = ((fPlasmaY * 2.0) + (c4 * 2.0) + (ccc * 32.0)) / 2.0;
+    fOffset = ((fPlasmaY * 2.0) + (float(GetC4(nXOffset0or1, t)) * 2.0) + (fPlasmaX / 4.0 * 32.0)) / 2.0;
     bx = ((sin(fOffset * DPII / 4096.0) * 55.0 + sin(fOffset * DPII / 4096.0 * 5.0) * 8.0 + sin(fOffset * DPII / 4096.0 * 15.0) * 2.0 + 64.0) * 8.0);
 
-    fOffset = bx + (fPlasmaY * 2.0) + c3 - (ccc * 4.0) + (80.0 * 4.0);
+    fOffset = bx + (fPlasmaY * 2.0) + float(GetC3(nXOffset0or1, t)) - (fPlasmaX / 4.0 * 4.0) + (80.0 * 4.0);
     ah += (sin(fOffset * DPII / 4096.0) * 55.0 + sin(fOffset * DPII / 4096.0 * 6.0) * 5.0 + sin(fOffset * DPII / 4096.0 * 21.0) * 4.0 + 64.0);
 
-    int nPaletteIndex = int(ah);
-
-    fRed = Palette_GetRed(nPaletteIndex, t);
-    fGreen = Palette_GetGreen(nPaletteIndex, t);
-    fBlue = Palette_GetBlue(nPaletteIndex, t);
+    fRed = Palette_GetRed(int(ah), t);
+    fGreen = Palette_GetGreen(int(ah), t);
+    fBlue = Palette_GetBlue(int(ah), t);
     }
 
   fRed = FadeColourComponent(fRed, t);
