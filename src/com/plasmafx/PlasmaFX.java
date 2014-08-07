@@ -11,8 +11,11 @@ class PlasmaFX
   private Program mProgram;
   private Shader mShader;
   private float time = 0.0f;
-  int width = 0;
-  int height = 0;
+  private int width = 0;
+  private int height = 0;
+  private long currentTime = 0;
+  private long lastTime = 0;
+  private float delta = 0.0f;
 
   public PlasmaFX(Context context)
     {
@@ -39,10 +42,17 @@ class PlasmaFX
 
   public void draw()
     {
+    currentTime = System.nanoTime();
+    if(lastTime != 0)
+      {
+      delta = (float)(currentTime - lastTime);
+      }
+    lastTime = currentTime;
+
     mProgram.setViewMatrix(0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
         0.0f);
     mProgram.draw(time, width, height);
-    time += 0.02f;
+    time += (delta * 0.0000000005f);
     }
 
   public void setViewPort(int width, int height)
