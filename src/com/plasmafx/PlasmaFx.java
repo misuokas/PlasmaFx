@@ -5,7 +5,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-class PlasmaFX
+class PlasmaFx
   {
 
   private Program mProgram;
@@ -17,7 +17,7 @@ class PlasmaFX
   private long lastTime = 0;
   private float delta = 0.0f;
 
-  public PlasmaFX(Context context)
+  public PlasmaFx(Context context)
     {
     DisplayMetrics displayMetrics = new DisplayMetrics();
 
