@@ -10,11 +10,11 @@ import javax.microedition.khronos.opengles.GL10;
 public class OpenGLRenderer implements GLSurfaceView.Renderer
   {
 
-  private PlasmaFX mPlasmaFX;
+  private PlasmaFx mPlasmaFx;
 
   OpenGLRenderer(Context context)
     {
-    mPlasmaFX = new PlasmaFX(context);
+    mPlasmaFx = new PlasmaFx(context);
     }
 
   @Override
@@ -26,14 +26,14 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer
     GLES20.glDepthFunc(GLES20.GL_LEQUAL);
     GLES20.glDepthMask(true);
 
-    mPlasmaFX.init();
+    mPlasmaFx.init();
     }
 
   @Override
   public void onDrawFrame(GL10 unused)
     {
     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-    mPlasmaFX.draw();
+    mPlasmaFx.draw();
     }
 
   @Override
@@ -41,6 +41,6 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer
     {
     GLES20.glViewport(0, 0, width, height);
 
-    mPlasmaFX.setViewPort(width, height);
+    mPlasmaFx.setViewPort(width, height);
     }
   }
